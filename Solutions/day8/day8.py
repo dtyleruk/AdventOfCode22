@@ -54,6 +54,7 @@ def calc_visible_trees(tree_array):
 
     return visible_tree_array
 
+
 # Determine viewing distance from the tree in element 0
 def view_distance(tree_vec):
     view_distance = 0
@@ -62,6 +63,7 @@ def view_distance(tree_vec):
         if tree >= tree_vec[0]:
             return view_distance
     return view_distance
+
 
 # Part 2, calc scenic score for each tree
 def calc_scenic_score(position, tree_array):
