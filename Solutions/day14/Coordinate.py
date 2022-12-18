@@ -19,6 +19,9 @@ class Coordinate:
         each_part_string = re.split(",", coord_string)
         return Coordinate(int(each_part_string[0]), int(each_part_string[1]))
 
+    def manhattan_distance_to_coord(self, coord):
+        return abs(coord.x - self.x) + abs(coord.y - self.y)
+
 
 def get_bottom_corner_of_coord_list(coord_list):
     if len(coord_list) == 0:
