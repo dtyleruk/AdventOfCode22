@@ -68,8 +68,8 @@ class Monkey:
         # print(self.items)
         for item in self.items:
             item = self.operation.apply_operation(item)
-            item = math.floor(item/float(self.worry_divider))
-            # to_throw_to = self.test.throw_to(item, self.id)
+            # item = math.floor(item/float(self.worry_divider))
+            to_throw_to = self.test.throw_to(item, self.id)
             self.throw_item(item, to_throw_to)
             self.inspection_count += 1
         self.items = []  # All items are thrown, so now we can clear them.
