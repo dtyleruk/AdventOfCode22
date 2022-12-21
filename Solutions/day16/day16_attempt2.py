@@ -68,11 +68,11 @@ def add_one_to_distances(valve_distances):
         for key in valve_distances[valve]:
             valve_distances[valve][key] += 1
 
-add_one_to_distances(valve_distances)
+# add_one_to_distances(valve_distances)
 
-init_network_v2 = NetworkStateV2(1, 0, 0, "AA", set(valve_pressures.keys()))
+init_network_v2 = NetworkStateV2(0, 0, 0, "AA", set(valve_pressures.keys()), 0)
 
-network_runner = NetworkRunner(valve_distances, valve_pressures, 31, init_network_v2)
+network_runner = NetworkRunner(valve_distances, valve_pressures, 30, init_network_v2)
 
 network_runner.run_all_steps()
 

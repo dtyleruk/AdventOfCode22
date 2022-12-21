@@ -2,32 +2,51 @@ import copy
 
 
 class NetworkStateV2:
-    def __init__(self, age, pressure, total_pressure, location, closed_valves):
+    def __init__(self, age, pressure, total_pressure, location, closed_valves, time_to_location):
         self.age = age
         self.pressure = pressure
         self.total_pressure = total_pressure
         self.location = location
         self.closed_valves = closed_valves
+        self.time_to_location = time_to_location
 
     def create_next_steps(self, valve_distances, valve_pressures, max_age):
-        new_states = []
 
+        self.age += 1
+        self.total_pressure += self.pressure
+        self.time_to_location -= 1
+
+        # Bascially wait until we get there to do anything
+        if self.time_to_location == 0:
+            if self.location in valve_pressures:
+                self.pressure += valve_pressures[self.location]
+
+        if self.time_to_location >= 0:
+            return [self]
+
+        # TODO this is the part to move it finished states, if it's slow
+        if len(self.closed_valves) == 0:
+            return [self]
+
+        new_states = []
         for next_location in self.closed_valves:
             travel_time = valve_distances[self.location][next_location]
-
-            added_pressure = self.calc_added_pressure(max_age, travel_time)
 
             new_closed_valves = copy.deepcopy(self.closed_valves)
             new_closed_valves.remove(next_location)
 
-            this_state = NetworkStateV2(self.age + travel_time,
-                                        self.pressure + valve_pressures[next_location],
-                                        self.total_pressure + added_pressure,
+            this_state = NetworkStateV2(self.age,
+                                        self.pressure,
+                                        self.total_pressure,
                                         next_location,
-                                        new_closed_valves)
+                                        new_closed_valves,
+                                        travel_time)
 
             new_states.append(this_state)
+
         return new_states
+
+
 
     # Stops adding pressure at max time
     def calc_added_pressure(self, max_age, travel_time):
@@ -43,7 +62,7 @@ class NetworkStateV2:
         self.total_pressure += time_to_max * self.pressure
 
     def __str__(self) -> str:
-        return "Age: " + str(self.age) + " Location: " + self.location + " Pres: " + str(self.pressure) + " TotPres: " + str(self.total_pressure)
+        return "Age: " + str(self.age) + " Location: " + self.location + " Pres: " + str(self.pressure) + " TotPres: " + str(self.total_pressure) + " Time to location: " + str(self.time_to_location)
 
 
 class NetworkRunner:
@@ -59,17 +78,11 @@ class NetworkRunner:
         self.age += 1
         new_states = []
         for state in self.states:
-            if state.age <= self.age:
-                states_to_add = state.create_next_steps(self.valve_distances, self.valve_pressures, self.max_age)
-                if len(states_to_add) > 0:
-                    new_states.extend(states_to_add)  # Eff gain, give each network a subset of valves
-                else:
-                    state.add_pressure_to_time(self.max_age)
-                    new_states.append(state)
-            else:
-                new_states.append(state)
+            states_to_add = state.create_next_steps(self.valve_distances, self.valve_pressures, self.max_age)
+            new_states.extend(states_to_add)  # Eff gain, give each network a subset of valves
+
         self.states = new_states
-        print("Age: ", self.age, " State count: ", len(self.states))
+        print("Age: ", self.age, " State count: ", len(self.states), " Finished state count: ", len(self.finished_states), " Max pressure: ", self.get_max_total_pressure())
 
     def run_all_steps(self):
         while self.age < self.max_age:
@@ -78,6 +91,9 @@ class NetworkRunner:
     def get_max_total_pressure(self):
         max_total_pressure = 0
         for state in self.states:
+            if state.total_pressure > max_total_pressure:
+                max_total_pressure = state.total_pressure
+        for state in self.finished_states:
             if state.total_pressure > max_total_pressure:
                 max_total_pressure = state.total_pressure
         return max_total_pressure
