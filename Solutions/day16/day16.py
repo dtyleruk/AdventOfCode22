@@ -1,6 +1,6 @@
 from Solutions.day16.Valve import NetworkStatus, Network
 
-f = open("../../Inputs/day16/test_data.dat", "r")
+f = open("../../Inputs/day16/part1.dat", "r")
 input = f.read().splitlines()
 
 network = Network(input)
@@ -13,7 +13,7 @@ network_states = [initial_network_state]
 def take_step(network_states):
     new_network_states = set()
     for state in network_states:
-        this_new_states = state.create_next_steps()
+        this_new_states = state.create_next_steps(True)
         for new_state in this_new_states:
             new_network_states.add(new_state)
     return new_network_states
@@ -53,6 +53,8 @@ for i in range(0, 30):
     belb = 1
 
 max_pressure = 0
+
+
 
 for status in network_states:
     if status.total_pressure > max_pressure:

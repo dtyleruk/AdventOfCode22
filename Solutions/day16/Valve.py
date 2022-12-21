@@ -13,7 +13,6 @@ class Valve:
     def add_connection(self, valve):
         self.connections.append(valve)
         self.connection_ids.append(valve.id)
-        # valve.connections.add(self.connections)
 
     def __str__(self) -> str:
         return self.id + " " + str(self.flow_rate) + " " + self.connections_string()
@@ -102,9 +101,9 @@ class NetworkStatus:
     def add_pressure(self):
         self.total_pressure += self.unit_pressure
 
-    def get_step_options(self):
+    def get_step_options(self, allow_open):
         step_options = []
-        if not self.is_location_valve_open() and self.location.flow_rate > 0:
+        if not self.is_location_valve_open() and self.location.flow_rate > 0 and allow_open:
             step_options = ["Open"]
         for connection in self.location.connection_ids:
             if self.previous_location.id != connection:
@@ -117,8 +116,8 @@ class NetworkStatus:
                 return True
         return False
 
-    def create_next_steps(self):
-        step_options = self.get_step_options()
+    def create_next_steps(self, allow_open):
+        step_options = self.get_step_options(allow_open)
 
         self.add_pressure()
 
