@@ -24,7 +24,7 @@ def prune_states(network_states):
     to_pop = []
 
     for state in network_states:
-        state_string = state.location.id + "-" + state.open_valves_string()
+        state_string = state.location_1.id + "-" + state.open_valves_string()
         if tot_pressure_map.get(state_string) != None:
             if tot_pressure_map.get(state_string) < state.total_pressure:
                 tot_pressure_map.update({state_string: state.total_pressure})
@@ -32,7 +32,7 @@ def prune_states(network_states):
             tot_pressure_map.update({state_string: state.total_pressure})
 
     for state in set(network_states):
-        state_string = state.location.id + "-" + state.open_valves_string()
+        state_string = state.location_1.id + "-" + state.open_valves_string()
         if tot_pressure_map[state_string] > state.total_pressure:
             network_states.remove(state)
 

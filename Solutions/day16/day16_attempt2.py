@@ -1,7 +1,7 @@
 from Solutions.day16.Valve import NetworkStatus, Network
 from Solutions.day16.NetworkStateV2 import NetworkStateV2, NetworkRunner
 
-f = open("../../Inputs/day16/part1.dat", "r")
+f = open("../../Inputs/day16/test_data.dat", "r")
 input = f.read().splitlines()
 
 
@@ -62,17 +62,10 @@ for valve in network.valves:
     if valve.flow_rate > 0:
         valve_pressures.update({valve.id: valve.flow_rate})
 
-# Add one to account for the valve turn on time
-def add_one_to_distances(valve_distances):
-    for valve in valve_distances:
-        for key in valve_distances[valve]:
-            valve_distances[valve][key] += 1
 
-# add_one_to_distances(valve_distances)
+init_network_v2 = NetworkStateV2(0, 0, 0, "AA", "AA", 0, 0, set(valve_pressures.keys()))
 
-init_network_v2 = NetworkStateV2(0, 0, 0, "AA", set(valve_pressures.keys()), 0)
-
-network_runner = NetworkRunner(valve_distances, valve_pressures, 30, init_network_v2)
+network_runner = NetworkRunner(valve_distances, valve_pressures, 26, init_network_v2)
 
 network_runner.run_all_steps()
 
