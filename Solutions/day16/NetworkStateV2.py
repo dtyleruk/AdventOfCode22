@@ -225,9 +225,26 @@ class NetworkRunner:
         self.states = new_states
         print("Age: ", self.age, " State count: ", len(self.states), " Finished state count: ", len(self.finished_states), " Max pressure: ", self.get_max_total_pressure())
 
+    # iterate over all states, only keep top n total_pressures, might work
+    def keep_top_n_results(self, n):
+        if n > len(self.states):
+            return
+
+        curr_pressures = []
+        for state in self.states:
+            curr_pressures.append(state.total_pressure)
+        curr_pressures.sort(reverse=True)
+        cut_off_pressure = curr_pressures[n]
+        states_to_keep = []
+        for state in self.states:
+            if state.total_pressure >= cut_off_pressure:
+                states_to_keep.append(state)
+        self.states = states_to_keep
+
     def run_all_steps(self):
         while self.age < self.max_age:
             self.add_step()
+            self.keep_top_n_results(50000)
 
     def get_max_total_pressure(self):
         max_total_pressure = 0

@@ -1,7 +1,7 @@
 from Solutions.day16.Valve import NetworkStatus, Network
 from Solutions.day16.NetworkStateV2 import NetworkStateV2, NetworkRunner
 
-f = open("../../Inputs/day16/test_data.dat", "r")
+f = open("../../Inputs/day16/part1.dat", "r")
 input = f.read().splitlines()
 
 
@@ -65,11 +65,15 @@ for valve in network.valves:
 
 init_network_v2 = NetworkStateV2(0, 0, 0, "AA", "AA", 0, 0, set(valve_pressures.keys()))
 
-network_runner = NetworkRunner(valve_distances, valve_pressures, 26, init_network_v2)
 
-network_runner.run_all_steps()
+results = []
+
+for run_num in range(0, 1):
+    network_runner = NetworkRunner(valve_distances, valve_pressures, 26, init_network_v2)
+    network_runner.run_all_steps()
+    results.append(network_runner.get_max_total_pressure())
 
 
-print("Max pressure is: ", network_runner.get_max_total_pressure())
+print("Max pressure is: ", results)
 
 belb = 1
