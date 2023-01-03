@@ -1,19 +1,22 @@
 import numpy as np
 
 from Solutions.day17.TetrisBoard import TetrisBoard
-from Solutions.day17.TetrisPiece import TetrisPiece
+
+
+def get_wind_array_from_input(input_string):
+    wind_array = []
+    for char in input_string:
+        if char == "<":
+            wind_array.append(-1)
+        else:
+            wind_array.append(1)
+    return wind_array
+
 
 f = open("../../Inputs/day17/test_data.dat", "r")
-input = f.read().splitlines()
-
-h_line = TetrisPiece(np.array([1, 1, 1, 1]))
-cross = TetrisPiece(np.array([[0,1,0],[1,1,1],[0,1,0]]))
-l_piece = TetrisPiece(np.array([[0,0,1],[0,0,1],[1,1,1]]))
-v_line = TetrisPiece(np.array([[1], [1], [1], [1]]))
-square = TetrisPiece(np.array([[1,1],[1,1]]))
-
-board = TetrisBoard([h_line, cross, l_piece, v_line, square])
-
+wind_array = get_wind_array_from_input(f.read().splitlines()[0])
+board = TetrisBoard(wind_array)
+board.make_n_pieces(3)
 
 belb = 1
 
