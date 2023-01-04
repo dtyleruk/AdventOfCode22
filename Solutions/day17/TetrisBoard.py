@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 from Solutions.day17.TetrisPiece import TetrisPiece, FallingTetrisPiece
 
@@ -15,7 +17,7 @@ class TetrisBoard:
     def __init__(self, wind_array):
         super().__init__()
 
-        self.board = np.zeros((5000, 9), dtype=int)
+        self.board = np.zeros((1000000, 9), dtype=int)
         self.board[0,:] = 1
         self.board[:,0] = 1
         self.board[:,8] = 1
@@ -26,6 +28,11 @@ class TetrisBoard:
         self.wind_array = wind_array
         self.wind_index = 0
         self.spawn_height = init_spawn_height
+        self.height_per_piece = []
+        self.wind_applied = 0
+        self.wind_per_piece = []
+
+        self.cut_tower = int(0) # How much of the tower has been removed
 
     def print_board(self, rows=10):
         for row in range(rows, -1, -1):
@@ -44,6 +51,7 @@ class TetrisBoard:
     # Apply wind to falling piece, then increment wind index
     def apply_wind(self, falling_piece: FallingTetrisPiece):
 
+        self.wind_applied += 1
         direction = self.wind_array[self.wind_index]
         self.wind_index += 1
         if self.wind_index >= len(self.wind_array):
@@ -97,8 +105,11 @@ class TetrisBoard:
 
     def make_n_pieces(self, n):
         for i in range(0, n):
+            if i%100000 == 0:
+                print("Doing step ", i)
             self.add_piece()
-            print("Highest point on the tower after ", i, " steps is:", self.highest_point_on_tower(),". Spawn height: ", self.spawn_height)
+            self.height_per_piece.append(self.spawn_height - 3)
+            self.wind_per_piece.append(self.wind_applied)
 
     def add_piece(self):
         piece = self.get_next_piece()
@@ -119,4 +130,4 @@ class TetrisBoard:
         max_height = 0
         for col in range(1, self.board.shape[1]-1):
             max_height = max(max_height, np.where(self.board[:, col] == 1)[0][-1])
-        return max_height
+        return int(max_height) + self.cut_tower
