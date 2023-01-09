@@ -13,6 +13,8 @@ robot_factories = []
 for line in input:
     robot_factories.append(RobotFactory(line))
 
+robot_factories = robot_factories[:3]
+
 def is_robot_count_b_better_than_a(a,b):
     # return a != b and (a[0] <= b[0] and
     #             a[1] <= b[1] and
@@ -40,7 +42,7 @@ def prune_states_that_cant_catch_max_geode_count(states, time_remaining):
     to_remove = set()
 
     for state_index in range(0, len(states)):
-        if states[state_index].theoretical_max_geodes(time_remaining) < max_geodes:
+        if states[state_index].theoretical_max_geodes(time_remaining, False) < max_geodes:
             to_remove.add(state_index)
 
     if len(to_remove) > 0:
@@ -112,7 +114,7 @@ def prune_states(states, time_remaining):
 def find_max_geodes_of_blueprint(init_state):
     time_passed = 0
     latest_states = [init_state]
-    max_time = 24
+    max_time = 32
     while time_passed < max_time:
         new_latest_states = []
         for state in latest_states:
@@ -127,6 +129,7 @@ def find_max_geodes_of_blueprint(init_state):
 
 
 quality_levels = []
+raw_values = []
 quality_level_sum = 0
 
 for blueprint in robot_factories:
@@ -134,6 +137,10 @@ for blueprint in robot_factories:
     init_state = RobotFactoryState(blueprint, 0, (1, 0, 0, 0), (0, 0, 0, 0))
     max_geodes = find_max_geodes_of_blueprint(init_state)
     quality_levels.append(max_geodes * blueprint.id)
+    raw_values.append(max_geodes)
     quality_level_sum += max_geodes * blueprint.id
+
+print(quality_levels)
+print(raw_values)
 
 print("Total quality level: ", quality_level_sum)

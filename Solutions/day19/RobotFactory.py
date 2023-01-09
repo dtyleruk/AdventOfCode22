@@ -36,6 +36,11 @@ class RobotFactory:
         )
         options.append(
             material_counts[0] >= self.geode_robot_cost[0] and material_counts[2] >= self.geode_robot_cost[2])
+
+        # Add some random pruning conditions
+        # if material_counts[0] > 20: # Don't do nothing if you are sitting on hella ore
+        #     options[0] = False
+
         return options
 
 
@@ -131,12 +136,13 @@ class RobotFactoryState:
         next_options = self.robot_factory.what_robots_can_be_built(self.material_counts, self.robot_counts)
 
         # I think the recurse is just a plain bad idea
-        if recurse and time_remaining > 1:
+        if recurse and time_remaining > 2:
             next_steps = self.get_next_min_states(next_options)
             theoretical_max_geodes = 0
+            base_geodes = self.material_counts[3] + self.robot_counts[3]
             for state in next_steps:
-                if state.theoretical_max_geodes(time_remaining-1, False) > theoretical_max_geodes:
-                    theoretical_max_geodes = state.theoretical_max_geodes(time_remaining-1, False)
+                if base_geodes + state.theoretical_max_geodes(time_remaining-1, False) > theoretical_max_geodes:
+                    theoretical_max_geodes = base_geodes + state.theoretical_max_geodes(time_remaining-1, False)
             return theoretical_max_geodes
 
         else:
@@ -148,7 +154,7 @@ class RobotFactoryState:
 
             return (self.material_counts[3] +
                     self.robot_counts[3] * time_remaining +
-                    int((psudo_time_remaining - 1) * (psudo_time_remaining - 2) / 2))
+                    int((psudo_time_remaining) * (psudo_time_remaining - 1) / 2))
 
 
 
