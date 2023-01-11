@@ -122,5 +122,3 @@ for i in range(0, len(tuples)):
 tuples = perform_n_mixes(tuples, 10)
 grove_number = calc_grove_number(tuples)
 print("Grove number is:", grove_number)
-
-belb = 1
