@@ -2,6 +2,7 @@ from Inputs.day20.part1 import *
 
 # input = [0,0,0,0,8]
 # input = [0,0,0,-3,-8]
+# input = [0, 0, 0, 0, -51]
 
 # Make each value a tuple. It's value plus has it been moved
 
@@ -49,10 +50,13 @@ def move_element(tuples, index_to_move):
 
         # Shift elements along if there is a loopy loop
         if int(abs(distance_to_move) / len(tuples)) > 0:
+            loops_remainder = 1
             if int(abs(distance_to_move) / len(tuples)) > 1:
-                raise Exception
+                loops = int(-distance_to_move / len(tuples))
+                # Every n-1 loops of n gives the same result
+                loops_remainder = loops % (len(tuples) - 1)
             # Need to shift all the other elements
-            tuples = tuples[-2:-1] + tuples[:-2] + tuples[-1:]
+            tuples = tuples[-(loops_remainder+1):-1] + tuples[:-(loops_remainder+1)] + tuples[-1:]
 
         tuples = do_normal_move(tuples, len(tuples)-1,  -(-distance_to_move%len(tuples)))
 
@@ -74,7 +78,7 @@ def mix_values(tuples):
                 curr_index += 1
             values_moved += 1
             # print(curr_index, " ", values_moved, " ", tuples)
-            print(curr_index, " ", values_moved)
+            # print(curr_index, " ", values_moved)
 
         else:
             curr_index += 1
@@ -83,7 +87,13 @@ def mix_values(tuples):
 
     return tuples
 
-# Finally find the 0
+
+def perform_n_mixes(tuples, n):
+    for i in range(0,n):
+        print("Doing mix:", i+1, "of", n)
+        tuples = mix_values(tuples)
+    return tuples
+
 
 def calc_grove_number(tuples):
     zero_index = 0
@@ -102,11 +112,15 @@ grove_number = calc_grove_number(tuples)
 print("Grove number is:", grove_number)
 
 # Part 2
+print("Starting part 2")
 tuples = make_tuples(input)
 
 decryption_key = 811589153
 for i in range(0, len(tuples)):
     tuples[i] = (tuples[i][0] * decryption_key, tuples[i][1])
 
-tuples = mix_values(tuples)
+tuples = perform_n_mixes(tuples, 10)
+grove_number = calc_grove_number(tuples)
+print("Grove number is:", grove_number)
+
 belb = 1
