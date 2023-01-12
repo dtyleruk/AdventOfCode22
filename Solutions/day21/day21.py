@@ -1,3 +1,6 @@
+import math
+from fractions import Fraction
+
 from Solutions.day21.YellingMonkey import YellingMonkey
 
 f = open("../../Inputs/day21/part1.dat", "r")
@@ -28,15 +31,34 @@ monkey_dict["root"].calc_value()
 
 def perform_reverse_operation(RHS, operation):
 
+    # intermediate value for debugging
+    LHS = RHS
     if operation[0] == "+":
-        return RHS - operation[1]
-    if operation[0] == "-":
-        return RHS + operation[1]
-    if operation[0] == "*":
-        return RHS // operation[1]
-    if operation[0] == "/":
-        return RHS * operation[1]
-    raise Exception
+        LHS -= operation[1]
+    elif operation[0] == "-":
+        LHS += operation[1]
+    elif operation[0] == "*":
+        LHS /= operation[1]
+        # LHS //= operation[1]
+    elif operation[0] == "/":
+        LHS *= operation[1]
+    else:
+        raise Exception
+
+    # if operation[0] == "+":
+    #     if LHS + operation[1] != RHS:
+    #         raise
+    # if operation[0] == "-":
+    #     if LHS - operation[1] != RHS:
+    #         raise
+    # if operation[0] == "*":
+    #     if LHS * operation[1] != RHS:
+    #         raise
+    # if operation[0] == "/":
+    #     if LHS // operation[1] != RHS:
+    #         raise
+
+    return LHS
 
 
 def unpick_operation(operation_list):

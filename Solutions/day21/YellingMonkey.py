@@ -1,4 +1,7 @@
 import re
+from fractions import Fraction
+
+from numpy import long
 
 
 class YellingMonkey:
@@ -14,7 +17,7 @@ class YellingMonkey:
             self.operation = input_string[11:12]
             self.parent2 = input_string[13:]
         else:
-            self.value = int(value[0])
+            self.value = Fraction(value[0])
             self.parent1 = None
             self.operation = None
             self.parent2 = None
@@ -51,7 +54,7 @@ class YellingMonkey:
         elif self.operation == "*":
             return value * self.monkey_dict[self.parent2].value
         elif self.operation == "/":
-            return value // self.monkey_dict[self.parent2].value
+            return value / self.monkey_dict[self.parent2].value
         else:
             raise Exception
 
