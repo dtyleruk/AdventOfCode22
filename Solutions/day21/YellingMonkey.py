@@ -61,7 +61,13 @@ class YellingMonkey:
     def add_operation_string(self, which_parent_is_list):
         list_of_operations = self.get_parent_n_value(which_parent_is_list)
         non_annoying_parent_value = self.get_parent_n_value(3 - which_parent_is_list)
-        list_of_operations.append((self.operation, non_annoying_parent_value))
+
+        if self.operation == "-" and which_parent_is_list == 2:
+            list_of_operations.append(("1-", non_annoying_parent_value))
+        elif self.operation == "/" and which_parent_is_list == 2:
+            list_of_operations.append(("1/", non_annoying_parent_value))
+        else:
+            list_of_operations.append((self.operation, non_annoying_parent_value))
         return list_of_operations
 
 

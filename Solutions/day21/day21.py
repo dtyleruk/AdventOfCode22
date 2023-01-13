@@ -42,6 +42,10 @@ def perform_reverse_operation(RHS, operation):
         # LHS //= operation[1]
     elif operation[0] == "/":
         LHS *= operation[1]
+    elif operation[0] =="1/":
+        LHS = operation[1]/RHS
+    elif operation[0] == "1-":
+        LHS = operation[1] - RHS
     else:
         raise Exception
 
